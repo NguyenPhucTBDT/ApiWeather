@@ -28,11 +28,14 @@ import java.util.*
 import kotlin.math.ceil
 
 class MainActivity : AppCompatActivity() {
-    var tvTemp: TextView? = null
-    var tvAddress: TextView? = null
-    var imgIcon: ImageView? = null
-    var tvTempMin: TextView? = null
-    var tvTimeZone: TextView? = null
+    private lateinit var tvTemp: TextView
+    private lateinit var tvAddress: TextView
+    private lateinit var imgIcon: ImageView
+    private lateinit var tvTempMin: TextView
+    private lateinit var tvTimeZone: TextView
+    private lateinit var rcvWeather: RecyclerView
+
+    private val weatherAdapter by lazy { WeatherAdapter() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         imgIcon = findViewById(R.id.img_icon)
         tvTempMin = findViewById(R.id.tv_temp_max)
         tvTimeZone = findViewById(R.id.tv_time_zone)
+        rcvWeather = findViewById(R.id.rcv_weather)
         callApi()
         initRecycleView()
     }
@@ -49,16 +53,16 @@ class MainActivity : AppCompatActivity() {
     private fun callApi() {
         val api = ApiHelper.getInstance().create(WeatherService::class.java)
         CoroutineScope(IO).launch {
-            val weatherData = api.getCurrentWeatherInfor(lat, lon, lang, units, appId)
+            val weatherData = api.getCurrentWeatherInfor(LAT, LON, LANG, UNITS, APP_ID)
             if (weatherData.isSuccessful && weatherData.body() != null) {
                 val infor = weatherData.body()!!
-                withContext(Main) {
+                withContext(IO) {
                     val fmtFr =
                         MeasureFormat.getInstance(ULocale.ENGLISH, MeasureFormat.FormatWidth.SHORT)
                     val measure =
-                        Measure(ceil(infor.main?.temp!!), MeasureUnit.CELSIUS);
-                    tvTemp?.text = fmtFr.format(measure)
-                    tvAddress?.text = infor.name.toString()
+                        Measure(ceil(infor.main?.temp!!), MeasureUnit.CELSIUS)
+                    tvTemp.text = fmtFr.format(measure)
+                    tvAddress.text = infor.name.toString()
                     withContext(Main) {
                         loadImage(infor.weather?.get(0)?.icon.toString())
                     }
@@ -66,26 +70,26 @@ class MainActivity : AppCompatActivity() {
                         ceil(infor.main?.temp_max!!).toString() + "°C" + " / " + ceil(infor.main?.temp_min!!).toString() + "°C " + " Feels like " + ceil(
                             infor.main?.feels_like!!
                         ).toString() + "°C"
-                    tvTempMin?.text = stringTemp
+                    tvTempMin.text = stringTemp
                     val dateFormat =
                         SimpleDateFormat("EEEE , HH:mm a", Locale(infor.timezone.toString()))
-                    tvTimeZone?.text = dateFormat.format(Date())
+                    tvTimeZone.text = dateFormat.format(Date())
                 }
             }
         }
     }
 
     private fun loadImage(icon: String) {
-        val url = "https://openweathermap.org/img/wn/$icon@2x.png"
+        val url = resources.getString(R.string.weather_icon_image_url, icon)
         Picasso.get().load(url)
             .error(R.drawable.ic_launcher_foreground)
-            .resize(300, 300)
+            .resize(IMAGE_WIDHT, IMAGE_HEIGHT)
             .centerCrop()
             .into(imgIcon)
     }
 
     private fun initRecycleView() {
-        val listSummaryWeather = mutableListOf<WeatherView.TimeWeather>(
+        val listSummaryWeather = mutableListOf(
             WeatherView.TimeWeather("6 am", "", "26°C", "10%"),
             WeatherView.TimeWeather("7 am", "", "26°C", "10%"),
             WeatherView.TimeWeather("8 am", "", "26°C", "10%"),
@@ -101,40 +105,43 @@ class MainActivity : AppCompatActivity() {
         rcvSummary.adapter = summaryAdapter
         rcvSummary.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         //
-        val listSummaryWeatherDays = mutableListOf<WeatherView.DaysWeather>(
-            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
-            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
-            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
-            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
-            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
-            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
-            WeatherView.DaysWeather("Today","18%","","","35°C","20°C")
+        val listSummaryWeatherDays = mutableListOf(
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C")
         )
         val rcvSummaryDays = findViewById<RecyclerView>(R.id.rcv_summary_weather_days)
         val summaryDaysAdapter = SummaryWeatherDaysAdapter()
         summaryDaysAdapter.submitList(listSummaryWeatherDays)
         rcvSummaryDays.adapter = summaryDaysAdapter
-        rcvSummaryDays.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        rcvSummaryDays.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         //
-        val list = mutableListOf<WeatherView>(
+        val list = mutableListOf(
             WeatherView.TypeOne("5:30 am", "7 pm"),
             WeatherView.TypeSecond("Extreme", "15 km/h", "80 %"),
             WeatherView.TypeThird("Hight", "Low", "None", "Good"),
         )
-        val rcvWeather = findViewById<RecyclerView>(R.id.rcv_weather)
-        val weatherAdapter = WeatherAdapter()
+
+        rcvWeather.run {
+            adapter = weatherAdapter
+            isNestedScrollingEnabled = false
+        }
+
         weatherAdapter.submitList(list)
-        rcvWeather.adapter = weatherAdapter
-        rcvWeather.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        rcvWeather.isNestedScrollingEnabled = false
     }
 
-
     companion object {
-        var lat = "21.0278"
-        var lon = "105.8342"
-        var lang = "vi"
-        var units = "metric"
-        var appId = "f2531f441e88f4c97950a7e95a594fa8"
+        const val LAT = "21.0278"
+        const val LON = "105.8342"
+        const val LANG = "vi"
+        const val UNITS = "metric"
+        const val APP_ID = "f2531f441e88f4c97950a7e95a594fa8"
+        const val IMAGE_WIDHT = 300
+        const val IMAGE_HEIGHT = 300
     }
 }
