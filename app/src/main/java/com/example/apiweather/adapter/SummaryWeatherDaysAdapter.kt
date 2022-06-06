@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.apiweather.R
 import com.example.apiweather.model.WeatherView
 
-
 class SummaryWeatherDaysAdapter :
-    ListAdapter<WeatherView.DaysWeather, SummaryWeatherDaysAdapter.ViewHolder>(SummaryWeatherDaysDiffCallback()) {
+    ListAdapter<WeatherView.DaysWeather, SummaryWeatherDaysAdapter.ViewHolder>(
+        SummaryWeatherDaysDiffCallback()
+    ) {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvDay = itemView.findViewById<TextView>(R.id.txt_day)
         private val tvMoisture = itemView.findViewById<TextView>(R.id.txt_moisture_day)
@@ -27,14 +28,19 @@ class SummaryWeatherDaysAdapter :
     }
 
     class SummaryWeatherDaysDiffCallback : DiffUtil.ItemCallback<WeatherView.DaysWeather>() {
-        override fun areItemsTheSame(oldItem: WeatherView.DaysWeather, newItem: WeatherView.DaysWeather): Boolean {
+        override fun areItemsTheSame(
+            oldItem: WeatherView.DaysWeather,
+            newItem: WeatherView.DaysWeather
+        ): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: WeatherView.DaysWeather, newItem: WeatherView.DaysWeather): Boolean {
+        override fun areContentsTheSame(
+            oldItem: WeatherView.DaysWeather,
+            newItem: WeatherView.DaysWeather
+        ): Boolean {
             return oldItem == newItem
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -25,12 +25,13 @@ sealed class WeatherView {
         val temp: String,
         val moisture: String
     )
-     data class DaysWeather(
-         val days : String,
-         val moisture : String,
-         val icon1 : String,
-         val icon2 : String,
-         val temp_max : String,
-         val temp_min : String,
-     )
+
+    data class DaysWeather(
+        val days: String,
+        val moisture: String,
+        val icon1: String,
+        val icon2: String,
+        val temp_max: String,
+        val temp_min: String,
+    )
 }
