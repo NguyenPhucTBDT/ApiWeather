@@ -7,7 +7,6 @@ import android.icu.util.MeasureUnit
 import android.icu.util.ULocale
 import android.os.Bundle
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,12 +16,9 @@ import com.example.apiweather.adapter.SummaryWeatherDaysAdapter
 import com.example.apiweather.adapter.WeatherAdapter
 import com.example.apiweather.api.ApiHelper
 import com.example.apiweather.api.WeatherService
-import com.example.apiweather.model.DaysWeather
-import com.example.apiweather.model.TimeWeather
 import com.example.apiweather.model.WeatherView
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -89,15 +85,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecycleView() {
-        val listSummaryWeather = mutableListOf<TimeWeather>(
-            TimeWeather("6 am", "", "26°C", "10%"),
-            TimeWeather("7 am", "", "26°C", "10%"),
-            TimeWeather("8 am", "", "26°C", "10%"),
-            TimeWeather("9 am", "", "26°C", "10%"),
-            TimeWeather("10 am", "", "26°C", "10%"),
-            TimeWeather("11 am", "", "26°C", "10%"),
-            TimeWeather("12 am", "", "26°C", "10%"),
-            TimeWeather("13 pm", "", "26°C", "10%"),
+        val listSummaryWeather = mutableListOf<WeatherView.TimeWeather>(
+            WeatherView.TimeWeather("6 am", "", "26°C", "10%"),
+            WeatherView.TimeWeather("7 am", "", "26°C", "10%"),
+            WeatherView.TimeWeather("8 am", "", "26°C", "10%"),
+            WeatherView.TimeWeather("9 am", "", "26°C", "10%"),
+            WeatherView.TimeWeather("10 am", "", "26°C", "10%"),
+            WeatherView.TimeWeather("11 am", "", "26°C", "10%"),
+            WeatherView.TimeWeather("12 am", "", "26°C", "10%"),
+            WeatherView.TimeWeather("13 pm", "", "26°C", "10%"),
         )
         val rcvSummary = findViewById<RecyclerView>(R.id.rcv_summary_weather)
         val summaryAdapter = SummaryWeatherAdapter()
@@ -105,14 +101,14 @@ class MainActivity : AppCompatActivity() {
         rcvSummary.adapter = summaryAdapter
         rcvSummary.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         //
-        val listSummaryWeatherDays = mutableListOf<DaysWeather>(
-            DaysWeather("Today","18%","","","35°C","20°C"),
-            DaysWeather("Today","18%","","","35°C","20°C"),
-            DaysWeather("Today","18%","","","35°C","20°C"),
-            DaysWeather("Today","18%","","","35°C","20°C"),
-            DaysWeather("Today","18%","","","35°C","20°C"),
-            DaysWeather("Today","18%","","","35°C","20°C"),
-            DaysWeather("Today","18%","","","35°C","20°C")
+        val listSummaryWeatherDays = mutableListOf<WeatherView.DaysWeather>(
+            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
+            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
+            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
+            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
+            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
+            WeatherView.DaysWeather("Today","18%","","","35°C","20°C"),
+            WeatherView.DaysWeather("Today","18%","","","35°C","20°C")
         )
         val rcvSummaryDays = findViewById<RecyclerView>(R.id.rcv_summary_weather_days)
         val summaryDaysAdapter = SummaryWeatherDaysAdapter()
