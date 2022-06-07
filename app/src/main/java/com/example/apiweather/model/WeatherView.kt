@@ -19,18 +19,21 @@ sealed class WeatherView {
         val running: String
     ) : WeatherView()
 
+    data class TypeFourth(val list: MutableList<TimeWeather>) : WeatherView()
+    data class TypeFifth(val list: MutableList<DaysWeather>) : WeatherView()
+    data class DaysWeather(
+        val days: String,
+        val moisture: String,
+        val icon1: String,
+        val icon2: String,
+        val temp_max: String,
+        val temp_min: String,
+    )
+
     data class TimeWeather(
         val time: String,
         val icon: String,
         val temp: String,
         val moisture: String
     )
-     data class DaysWeather(
-         val days : String,
-         val moisture : String,
-         val icon1 : String,
-         val icon2 : String,
-         val temp_max : String,
-         val temp_min : String,
-     )
 }

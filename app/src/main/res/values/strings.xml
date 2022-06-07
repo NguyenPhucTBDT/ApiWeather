@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ApiWeather</string>
+    <string name="weather_icon_image_url">https://openweathermap.org/img/wn/%s@2x.png</string>
 </resources>

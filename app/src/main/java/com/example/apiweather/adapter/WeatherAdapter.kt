@@ -16,7 +16,9 @@ class WeatherAdapter : ListAdapter<WeatherView, WeatherAdapter.ViewHolder>(Weath
         val layout = when (viewType) {
             0 -> R.layout.item_type_one
             1 -> R.layout.item_type_second
-            else -> R.layout.item_type_third
+            2 -> R.layout.item_type_third
+            3 -> R.layout.item_layout_type_fifth
+            else -> R.layout.item_layout_type_fourth
         }
         val context = parent.context
         val inflater = LayoutInflater.from(context)
@@ -29,6 +31,8 @@ class WeatherAdapter : ListAdapter<WeatherView, WeatherAdapter.ViewHolder>(Weath
             is WeatherView.TypeOne -> 0
             is WeatherView.TypeSecond -> 1
             is WeatherView.TypeThird -> 2
+            is WeatherView.TypeFourth -> 3
+            else -> 4
         }
     }
 
@@ -42,6 +46,8 @@ class WeatherAdapter : ListAdapter<WeatherView, WeatherAdapter.ViewHolder>(Weath
         private val tvPollen = itemView.findViewById<TextView>(R.id.txt_pollen)
         private val tvDriving = itemView.findViewById<TextView>(R.id.txt_driving_difficulty)
         private val tvRunning = itemView.findViewById<TextView>(R.id.txt_running)
+        private val rcvTimeWeather = itemView.findViewById<RecyclerView>(R.id.rcv_time_weather)
+        private val rcvDaysWeather = itemView.findViewById<RecyclerView>(R.id.rcv_days_weather)
         private fun bindTypeOne(item: WeatherView.TypeOne) {
             tvTimeSunrise.text = item.time_sunrise
             tvTimeSunset.text = item.time_sunset
@@ -60,22 +66,46 @@ class WeatherAdapter : ListAdapter<WeatherView, WeatherAdapter.ViewHolder>(Weath
             tvRunning.text = item.running
         }
 
+        private fun bindTimeWeather(item: WeatherView.TypeFourth) {
+            val timeAdapter = SummaryWeatherAdapter()
+            rcvTimeWeather.run {
+                adapter = timeAdapter
+            }
+            timeAdapter.submitList(item.list)
+        }
+
+        private fun bindDaysWeather(item: WeatherView.TypeFifth) {
+            val daysAdapter = SummaryWeatherDaysAdapter()
+            rcvDaysWeather.run {
+                adapter = daysAdapter
+            }
+            daysAdapter.submitList(item.list)
+        }
+
         fun bind(dataModel: WeatherView) {
             when (dataModel) {
                 is WeatherView.TypeOne -> bindTypeOne(dataModel)
                 is WeatherView.TypeSecond -> bindTypeSecond(dataModel)
                 is WeatherView.TypeThird -> bindTypeThird(dataModel)
+                is WeatherView.TypeFourth -> bindTimeWeather(dataModel)
+                is WeatherView.TypeFifth -> bindDaysWeather(dataModel)
             }
         }
     }
 
     class WeatherDiffCallback : DiffUtil.ItemCallback<WeatherView>() {
-        override fun areItemsTheSame(oldItem: WeatherView, newItem: WeatherView): Boolean {
+        override fun areItemsTheSame(
+            oldItem: WeatherView,
+            newItem: WeatherView
+        ): Boolean {
             return oldItem == newItem
         }
 
         @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: WeatherView, newItem: WeatherView): Boolean {
+        override fun areContentsTheSame(
+            oldItem: WeatherView,
+            newItem: WeatherView
+        ): Boolean {
             return oldItem == newItem
         }
     }
