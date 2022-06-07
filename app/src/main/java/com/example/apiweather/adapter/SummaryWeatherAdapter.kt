@@ -11,10 +11,13 @@ import com.example.apiweather.R
 import com.example.apiweather.model.WeatherView
 
 class SummaryWeatherAdapter :
-    ListAdapter<WeatherView.TimeWeather, SummaryWeatherAdapter.ViewHolder>(SummaryWeatherDiffCallback()) {
+    ListAdapter<WeatherView.TimeWeather, SummaryWeatherAdapter.ViewHolder>(
+        SummaryWeatherDiffCallback()
+    ) {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvTime = itemView.findViewById<TextView>(R.id.txt_time)
-        //private val imgIcon = itemView.findViewById<TextView>(R.id.img_icon_weather)
+
+        // private val imgIcon = itemView.findViewById<TextView>(R.id.img_icon_weather)
         private val tvTemp = itemView.findViewById<TextView>(R.id.txt_temp)
         private val tvMoisture = itemView.findViewById<TextView>(R.id.txt_moisture)
         fun bind(item: WeatherView.TimeWeather) {
@@ -25,14 +28,19 @@ class SummaryWeatherAdapter :
     }
 
     class SummaryWeatherDiffCallback : DiffUtil.ItemCallback<WeatherView.TimeWeather>() {
-        override fun areItemsTheSame(oldItem: WeatherView.TimeWeather, newItem: WeatherView.TimeWeather): Boolean {
+        override fun areItemsTheSame(
+            oldItem: WeatherView.TimeWeather,
+            newItem: WeatherView.TimeWeather
+        ): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: WeatherView.TimeWeather, newItem: WeatherView.TimeWeather): Boolean {
+        override fun areContentsTheSame(
+            oldItem: WeatherView.TimeWeather,
+            newItem: WeatherView.TimeWeather
+        ): Boolean {
             return oldItem == newItem
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

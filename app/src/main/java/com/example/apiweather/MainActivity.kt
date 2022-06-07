@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         imgIcon = findViewById(R.id.img_icon)
         tvTempMin = findViewById(R.id.tv_temp_max)
         tvTimeZone = findViewById(R.id.tv_time_zone)
-        rcvWeather = findViewById(R.id.rcv_weather)
         callApi()
         initRecycleView()
     }
@@ -114,13 +113,14 @@ class MainActivity : AppCompatActivity() {
             WeatherView.TypeFifth(listSummaryWeatherDays),
             WeatherView.TypeOne("5:30 am", "7 pm"),
             WeatherView.TypeSecond("Extreme", "15 km/h", "80 %"),
-            WeatherView.TypeThird("High", "Low", "None", "Good"),
+            WeatherView.TypeThird("Hight", "Low", "None", "Good"),
         )
         rcvWeather.run {
             adapter = weatherAdapter
         }
         weatherAdapter.submitList(list)
     }
+
 
     companion object {
         const val LAT = "21.0278"
