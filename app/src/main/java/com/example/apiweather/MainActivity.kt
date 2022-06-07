@@ -11,10 +11,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apiweather.adapter.WeatherAdapter
-import com.example.apiweather.api.ApiHelper
-import com.example.apiweather.api.WeatherService
+import com.example.apiweather.api.WeatherApiManager
 import com.example.apiweather.model.WeatherView
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -47,41 +45,33 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("NewApi")
     private fun callApi() {
-        val api = ApiHelper.getInstance().create(WeatherService::class.java)
         CoroutineScope(IO).launch {
-            val weatherData = api.getCurrentWeatherInfo(LAT, LON, LANG, UNITS, APP_ID)
-            if (weatherData.isSuccessful && weatherData.body() != null) {
-                val info = weatherData.body()!!
-                withContext(Main) {
-                    val fmtFr =
-                        MeasureFormat.getInstance(ULocale.ENGLISH, MeasureFormat.FormatWidth.SHORT)
-                    val measure =
-                        Measure(ceil(info.main?.temp!!), MeasureUnit.CELSIUS);
-                    tvTemp.text = fmtFr.format(measure)
-                    tvAddress.text = info.name.toString()
-                    withContext(Main) {
-                        loadImage(info.weather?.get(0)?.icon.toString())
-                    }
-                    val stringTemp =
-                        ceil(info.main?.temp_max!!).toString() + "°C" + " / " + ceil(info.main?.temp_min!!).toString() + "°C " + " Feels like " + ceil(
-                            info.main?.feels_like!!
-                        ).toString() + "°C"
-                    tvTempMin.text = stringTemp
-                    val dateFormat =
-                        SimpleDateFormat("EEEE , HH:mm a", Locale(info.timezone.toString()))
-                    tvTimeZone.text = dateFormat.format(Date())
-                }
+            val info = WeatherApiManager.getInstance().getWeatherData()
+            withContext(Main) {
+                val fmtFr =
+                    MeasureFormat.getInstance(ULocale.ENGLISH, MeasureFormat.FormatWidth.SHORT)
+                val measure =
+                    Measure(ceil(requireNotNull(info.main?.temp)), MeasureUnit.CELSIUS)
+                tvTemp.text = fmtFr.format(measure)
+                tvAddress.text = info.name.toString()
+                loadImage(info.weather?.get(0)?.icon.toString())
+                val stringTemp =
+                    ceil(requireNotNull(info.main?.temp_max)).toString() + "°C" + " / " + ceil(
+                        requireNotNull(info.main?.temp_min)
+                    ).toString() + "°C " + " Feels like " + ceil(
+                        requireNotNull(info.main?.feels_like)
+                    ).toString() + "°C"
+                tvTempMin.text = stringTemp
+                val dateFormat =
+                    SimpleDateFormat("EEEE , HH:mm a", Locale(info.timezone.toString()))
+                tvTimeZone.text = dateFormat.format(Date())
             }
         }
     }
 
     private fun loadImage(icon: String) {
         val url = resources.getString(R.string.weather_icon_image_url, icon)
-        Picasso.get().load(url)
-            .error(R.drawable.ic_launcher_foreground)
-            .resize(IMAGE_WIDTH, IMAGE_HEIGHT)
-            .centerCrop()
-            .into(imgIcon)
+        imgIcon.loadImage(url)
     }
 
     private fun initRecycleView() {
@@ -108,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
             WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
 
-            )
+        )
 
         val list = mutableListOf(
             WeatherView.TypeFourth(listSummaryWeather),
@@ -124,13 +114,7 @@ class MainActivity : AppCompatActivity() {
         weatherAdapter.submitList(list)
     }
 
-
     companion object {
-        const val LAT = "21.0278"
-        const val LON = "105.8342"
-        const val LANG = "vi"
-        const val UNITS = "metric"
-        const val APP_ID = "f2531f441e88f4c97950a7e95a594fa8"
         const val IMAGE_WIDTH = 300
         const val IMAGE_HEIGHT = 300
     }

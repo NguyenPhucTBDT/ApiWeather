@@ -16,8 +16,6 @@ class SummaryWeatherAdapter :
     ) {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvTime = itemView.findViewById<TextView>(R.id.txt_time)
-
-        // private val imgIcon = itemView.findViewById<TextView>(R.id.img_icon_weather)
         private val tvTemp = itemView.findViewById<TextView>(R.id.txt_temp)
         private val tvMoisture = itemView.findViewById<TextView>(R.id.txt_moisture)
         fun bind(item: WeatherView.TimeWeather) {

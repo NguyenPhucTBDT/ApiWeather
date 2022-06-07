@@ -12,7 +12,7 @@ import com.example.apiweather.R
 import com.example.apiweather.model.WeatherView
 
 class WeatherAdapter : ListAdapter<WeatherView, WeatherAdapter.ViewHolder>(WeatherDiffCallback()) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layout = when (viewType) {
             0 -> R.layout.item_type_one
             1 -> R.layout.item_type_second
