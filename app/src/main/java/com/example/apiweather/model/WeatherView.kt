@@ -1,39 +1,34 @@
 package com.example.apiweather.model
 
-sealed class WeatherView {
-    data class TypeOne(
+sealed class WeatherView(val id: String) {
+    class TypeOne(
+        id: String,
         val time_sunrise: String,
         val time_sunset: String
-    ) : WeatherView()
+    ) : WeatherView(id)
 
-    data class TypeSecond(
+    class TypeSecond(
+        id: String,
         val statusUV: String,
         val speedWind: String,
         val percent: String
-    ) : WeatherView()
+    ) : WeatherView(id)
 
-    data class TypeThird(
+    class TypeThird(
+        id: String,
         val aqi: String,
         val pollen: String,
         val driving: String,
         val running: String
-    ) : WeatherView()
+    ) : WeatherView(id)
 
-    data class TypeFourth(val list: MutableList<TimeWeather>) : WeatherView()
-    data class TypeFifth(val list: MutableList<DaysWeather>) : WeatherView()
-    data class DaysWeather(
-        val days: String,
-        val moisture: String,
-        val icon1: String,
-        val icon2: String,
-        val temp_max: String,
-        val temp_min: String,
-    )
+    class TypeFourth(
+        id: String,
+        val list: MutableList<DaysWeather>
+    ) : WeatherView(id)
 
-    data class TimeWeather(
-        val time: String,
-        val icon: String,
-        val temp: String,
-        val moisture: String
-    )
+    class TypeFifth(
+        id: String,
+        val list: MutableList<TimeWeather>
+    ) : WeatherView(id)
 }

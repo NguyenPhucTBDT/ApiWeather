@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apiweather.adapter.WeatherAdapter
 import com.example.apiweather.api.WeatherApiManager
+import com.example.apiweather.model.DaysWeather
+import com.example.apiweather.model.TimeWeather
 import com.example.apiweather.model.WeatherView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -76,40 +78,59 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecycleView() {
         val listSummaryWeather = mutableListOf(
-            WeatherView.TimeWeather("6 am", "", "26°C", "10%"),
-            WeatherView.TimeWeather("7 am", "", "26°C", "10%"),
-            WeatherView.TimeWeather("8 am", "", "26°C", "10%"),
-            WeatherView.TimeWeather("9 am", "", "26°C", "10%"),
-            WeatherView.TimeWeather("10 am", "", "26°C", "10%"),
-            WeatherView.TimeWeather("11 am", "", "26°C", "10%"),
-            WeatherView.TimeWeather("12 am", "", "26°C", "10%"),
-            WeatherView.TimeWeather("13 pm", "", "26°C", "10%"),
+            TimeWeather("6 am", "", "26°C", "10%"),
+            TimeWeather("7 am", "", "26°C", "10%"),
+            TimeWeather("8 am", "", "26°C", "10%"),
+            TimeWeather("9 am", "", "26°C", "10%"),
+            TimeWeather("10 am", "", "26°C", "10%"),
+            TimeWeather("11 am", "", "26°C", "10%"),
+            TimeWeather("12 am", "", "26°C", "10%"),
+            TimeWeather("13 pm", "", "26°C", "10%"),
         )
 
         val listSummaryWeatherDays = mutableListOf(
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
         )
 
         val list = mutableListOf(
-            WeatherView.TypeFourth(listSummaryWeather),
-            WeatherView.TypeFifth(listSummaryWeatherDays),
-            WeatherView.TypeOne("5:30 am", "7 pm"),
-            WeatherView.TypeSecond("Extreme", "15 km/h", "80 %"),
-            WeatherView.TypeThird("High", "Low", "None", "Good"),
+            WeatherView.TypeFifth(
+                WeatherAdapter.WeatherViewTYPE.FIFTH.ordinal.toString(),
+                listSummaryWeather
+            ),
+            WeatherView.TypeFourth(
+                WeatherAdapter.WeatherViewTYPE.FOURTH.ordinal.toString(),
+                listSummaryWeatherDays
+            ),
+            WeatherView.TypeOne(
+                WeatherAdapter.WeatherViewTYPE.ONE.ordinal.toString(),
+                "5:30 am",
+                "7 pm"
+            ),
+            WeatherView.TypeSecond(
+                WeatherAdapter.WeatherViewTYPE.SECOND.ordinal.toString(),
+                "Extreme",
+                "15 km/h",
+                "80 %"
+            ),
+            WeatherView.TypeThird(
+                WeatherAdapter.WeatherViewTYPE.THIRD.ordinal.toString(),
+                "High",
+                "Low",
+                "None",
+                "Good"
+            ),
         )
         rcvWeather.run {
             adapter = weatherAdapter
-            isNestedScrollingEnabled = true
         }
         weatherAdapter.submitList(list)
     }
