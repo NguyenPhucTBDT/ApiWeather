@@ -36,7 +36,7 @@
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:layout_weight="1"
-                    android:gravity="left|center"
+                    android:gravity="start|center"
                     android:text="28"
                     android:textColor="@color/white"
                     android:textSize="50sp" />
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:drawableEnd="@drawable/ic_baseline_location_on_24"
+                app:drawableEndCompat="@drawable/ic_baseline_location_on_24"
                 android:gravity="center"
                 android:text="Nhân Chính"
                 android:textColor="@color/white"
@@ -69,7 +69,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="30"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="1"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
@@ -88,6 +88,7 @@
                 android:id="@+id/rcv_weather"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
+                android:scrollbars="none"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

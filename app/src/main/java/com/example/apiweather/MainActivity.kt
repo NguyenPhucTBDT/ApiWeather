@@ -9,10 +9,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.apiweather.adapter.SummaryWeatherAdapter
-import com.example.apiweather.adapter.SummaryWeatherDaysAdapter
 import com.example.apiweather.adapter.WeatherAdapter
 import com.example.apiweather.api.ApiHelper
 import com.example.apiweather.api.WeatherService
@@ -43,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         imgIcon = findViewById(R.id.img_icon)
         tvTempMin = findViewById(R.id.tv_temp_max)
         tvTimeZone = findViewById(R.id.tv_time_zone)
+        rcvWeather = findViewById(R.id.rcv_weather)
         callApi()
         initRecycleView()
     }
@@ -105,18 +103,23 @@ class MainActivity : AppCompatActivity() {
             WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
             WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
             WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
-            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C")
-        )
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+            WeatherView.DaysWeather("Today", "18%", "", "", "35°C", "20°C"),
+
+            )
 
         val list = mutableListOf(
             WeatherView.TypeFourth(listSummaryWeather),
             WeatherView.TypeFifth(listSummaryWeatherDays),
             WeatherView.TypeOne("5:30 am", "7 pm"),
             WeatherView.TypeSecond("Extreme", "15 km/h", "80 %"),
-            WeatherView.TypeThird("Hight", "Low", "None", "Good"),
+            WeatherView.TypeThird("High", "Low", "None", "Good"),
         )
         rcvWeather.run {
             adapter = weatherAdapter
+            isNestedScrollingEnabled = true
         }
         weatherAdapter.submitList(list)
     }
