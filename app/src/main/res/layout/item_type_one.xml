@@ -41,7 +41,7 @@
             <ImageView
                 android:id="@+id/img_sunrise"
                 android:padding="10dp"
-                android:src="@drawable/ic_baseline_wb_sunny_24"
+                android:src="@drawable/ic_sunrise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -74,7 +74,7 @@
             <ImageView
                 android:id="@+id/img_sunset"
                 android:padding="10dp"
-                android:src="@drawable/ic_baseline_wb_sunny_24"
+                android:src="@drawable/ic_sunset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

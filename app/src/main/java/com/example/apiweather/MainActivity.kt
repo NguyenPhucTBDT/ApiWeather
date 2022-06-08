@@ -1,30 +1,29 @@
 package com.example.apiweather
 
-import android.annotation.SuppressLint
 import android.icu.text.MeasureFormat
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import android.icu.util.ULocale
+import android.os.Build
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apiweather.adapter.WeatherAdapter
-import com.example.apiweather.api.WeatherApiManager
 import com.example.apiweather.model.DaysWeather
 import com.example.apiweather.model.TimeWeather
+import com.example.apiweather.model.WeatherResponse
 import com.example.apiweather.model.WeatherView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.apiweather.mvp.WeatherContract
+import com.example.apiweather.mvp.WeatherPresenter
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), WeatherContract.View {
+    private val mPresenter: WeatherPresenter by lazy { WeatherPresenter() }
     private lateinit var tvTemp: TextView
     private lateinit var tvAddress: TextView
     private lateinit var imgIcon: ImageView
@@ -41,39 +40,27 @@ class MainActivity : AppCompatActivity() {
         tvTempMin = findViewById(R.id.tv_temp_max)
         tvTimeZone = findViewById(R.id.tv_time_zone)
         rcvWeather = findViewById(R.id.rcv_weather)
-        callApi()
+        initPresenter()
+        mPresenter.getWeatherInfo()
         initRecycleView()
-    }
-
-    @SuppressLint("NewApi")
-    private fun callApi() {
-        CoroutineScope(IO).launch {
-            val info = WeatherApiManager.getInstance().getWeatherData()
-            withContext(Main) {
-                val fmtFr =
-                    MeasureFormat.getInstance(ULocale.ENGLISH, MeasureFormat.FormatWidth.SHORT)
-                val measure =
-                    Measure(ceil(requireNotNull(info.main?.temp)), MeasureUnit.CELSIUS)
-                tvTemp.text = fmtFr.format(measure)
-                tvAddress.text = info.name.toString()
-                loadImage(info.weather?.get(0)?.icon.toString())
-                val stringTemp =
-                    ceil(requireNotNull(info.main?.temp_max)).toString() + "°C" + " / " + ceil(
-                        requireNotNull(info.main?.temp_min)
-                    ).toString() + "°C " + " Feels like " + ceil(
-                        requireNotNull(info.main?.feels_like)
-                    ).toString() + "°C"
-                tvTempMin.text = stringTemp
-                val dateFormat =
-                    SimpleDateFormat("EEEE , HH:mm a", Locale(info.timezone.toString()))
-                tvTimeZone.text = dateFormat.format(Date())
-            }
-        }
     }
 
     private fun loadImage(icon: String) {
         val url = resources.getString(R.string.weather_icon_image_url, icon)
         imgIcon.loadImage(url)
+    }
+
+    private fun initPresenter() {
+        mPresenter.also {
+            it.attachView(this)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mPresenter.also {
+            it.detachView()
+        }
     }
 
     private fun initRecycleView() {
@@ -138,5 +125,26 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val IMAGE_WIDTH = 300
         const val IMAGE_HEIGHT = 300
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun showWeatherInfo(info: WeatherResponse) {
+        val fmtFr =
+            MeasureFormat.getInstance(ULocale.ENGLISH, MeasureFormat.FormatWidth.SHORT)
+        val measure =
+            Measure(ceil(requireNotNull(info.main?.temp)), MeasureUnit.CELSIUS)
+        tvTemp.text = fmtFr.format(measure)
+        tvAddress.text = info.name.toString()
+        loadImage(info.weather?.get(0)?.icon.toString())
+        val stringTemp =
+            ceil(requireNotNull(info.main?.temp_max)).toString() + "°C" + " / " + ceil(
+                requireNotNull(info.main?.temp_min)
+            ).toString() + "°C " + " Feels like " + ceil(
+                requireNotNull(info.main?.feels_like)
+            ).toString() + "°C"
+        tvTempMin.text = stringTemp
+        val dateFormat =
+            SimpleDateFormat("EEEE , HH:mm a", Locale(info.timezone.toString()))
+        tvTimeZone.text = dateFormat.format(Date())
     }
 }

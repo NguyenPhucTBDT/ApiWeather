@@ -48,7 +48,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_wb_sunny_24" />
+            android:src="@drawable/ic_wind" />
 
         <TextView
             android:layout_width="match_parent"
@@ -78,7 +78,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_wb_sunny_24" />
+            android:src="@drawable/ic_humidity" />
 
         <TextView
             android:layout_width="match_parent"
